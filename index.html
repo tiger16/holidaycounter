@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Holiday Countdown — Days Until Christmas, New Year, Easter, Halloween & More</title>
+  <meta name="description" content="Free holiday countdown timer. See exactly how many days, hours, minutes and seconds until Christmas, New Year, Easter, Halloween, Thanksgiving and more."/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    /* ── LIGHT (default) ── */
+    :root {
+      --bg:        #fdf6ee;
+      --surface:   #ffffff;
+      --surface2:  #f5ede0;
+      --border:    #e8d8c4;
+      --ink:       #1a1008;
+      --muted:     #7a6555;
+      --sub:       #b0998a;
+      --mono:      'DM Mono', monospace;
+      --display:   'Playfair Display', Georgia, serif;
+      --body:      'Inter', system-ui, sans-serif;
+    }
+
+    /* ── DARK / FESTIVE ── */
+    body.dark {
+      --bg:        #0a0e1a;
+      --surface:   #111827;
+      --surface2:  #1a2236;
+      --border:    #243050;
+      --ink:       #f0e8d8;
+      --muted:     #8899bb;
+      --sub:       #445577;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: var(--body);
+      line-height: 1.6;
+      min-height: 100vh;
+      transition: background 0.4s, color 0.4s;
+      overflow-x: hidden;
+    }
+
+    /* ── SNOW CANVAS (dark mode only) ── */
+    #snow-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0;
+      transition: opacity 1s;
+    }
+    body.dark #snow-canvas { opacity: 1; }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      z-index: 10;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      transition: background 0.4s, border-color 0.4s;
+    }
+    .logo {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: 1.3rem;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+    .logo-dot { color: #e03030; }
+    .logo-tag {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sub);
+    }
+    .theme-toggle {
+      margin-left: auto;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.35rem 0.9rem;
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .theme-toggle:hover { border-color: var(--ink); color: var(--ink); }
+
+    /* ── AD STRIP ── */
+    .ad-strip {
+      position: relative; z-index: 10;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      padding: 0.5rem;
+      transition: background 0.4s, border-color 0.4s;
+    }
+    .ad-slot {
+      display: inline-block;
+      width: 728px; max-width: 100%; height: 90px;
+      background: var(--surface2);
+      border: 1px dashed var(--border);
+      line-height: 90px;
+      font-family: var(--mono); font-size: 0.65rem;
+      color: var(--sub); letter-spacing: 0.05em;
+      transition: background 0.4s, border-color 0.4s;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; z-index: 10;
+      text-align: center;
+      padding: 4rem 2rem 2rem;
+    }
+    .hero-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.7rem; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--sub);
+      margin-bottom: 0.9rem;
+    }
+    .hero h1 {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      line-height: 1.05; letter-spacing: -0.02em;
+      color: var(--ink); margin-bottom: 0.75rem;
+    }
+    .hero-sub {
+      font-size: 1rem; color: var(--muted);
+      max-width: 440px; margin: 0 auto 2.5rem;
+    }
+
+    /* ── HOLIDAY PILL SELECTOR ── */
+    .holiday-pills {
+      display: flex; flex-wrap: wrap;
+      gap: 0.5rem; justify-content: center;
+      max-width: 800px; margin: 0 auto 3rem;
+    }
+    .h-pill {
+      padding: 0.45rem 1.1rem;
+      border-radius: 30px;
+      border: 1.5px solid var(--border);
+      background: var(--surface);
+      font-family: var(--body); font-size: 0.85rem; font-weight: 500;
+      cursor: pointer; color: var(--muted);
+      transition: all 0.2s;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .h-pill:hover { border-color: var(--ink); color: var(--ink); }
+    .h-pill.active {
+      color: #fff;
+      border-color: transparent;
+    }
+
+    /* ── MAIN COUNTDOWN ── */
+    .countdown-wrap {
+      position: relative; z-index: 10;
+      max-width: 780px; margin: 0 auto 3rem;
+      padding: 0 2rem;
+    }
+    .countdown-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem 2rem 2rem;
+      text-align: center;
+      transition: background 0.4s, border-color 0.4s;
+      position: relative; overflow: hidden;
+    }
+    .countdown-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0;
+      height: 4px;
+      background: var(--h-color, #e03030);
+      transition: background 0.4s;
+    }
+    .countdown-emoji {
+      font-size: 3.5rem; line-height: 1;
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .countdown-name {
+      font-family: var(--display);
+      font-weight: 900; font-size: 1.8rem;
+      letter-spacing: -0.02em; color: var(--ink);
+      margin-bottom: 0.2rem;
+    }
+    .countdown-date {
+      font-family: var(--mono); font-size: 0.75rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--sub); margin-bottom: 2rem;
+    }
+
+    /* digits row */
+    .digits-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .digit-block {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem 0.5rem 0.9rem;
+      transition: background 0.4s, border-color 0.4s;
+    }
+    .digit-num {
+      font-family: var(--display);
+      font-weight: 900;
+      font-size: clamp(2.2rem, 6vw, 3.4rem);
+      line-height: 1;
+      letter-spacing: -0.03em;
+      color: var(--h-color, #e03030);
+      transition: color 0.4s;
+      display: block;
+    }
+    .digit-label {
+      font-family: var(--mono);
+      font-size: 0.62rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--sub);
+      margin-top: 0.4rem; display: block;
+    }
+
+    /* progress bar */
+    .progress-wrap {
+      margin-bottom: 0.4rem;
+    }
+    .progress-label {
+      display: flex; justify-content: space-between;
+      font-family: var(--mono); font-size: 0.65rem;
+      color: var(--sub); margin-bottom: 0.4rem;
+      letter-spacing: 0.05em;
+    }
+    .progress-bar {
+      height: 6px; background: var(--surface2);
+      border-radius: 3px; overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .progress-fill {
+      height: 100%; border-radius: 3px;
+      background: var(--h-color, #e03030);
+      transition: width 1s linear, background 0.4s;
+    }
+
+    /* ── ALL HOLIDAYS GRID ── */
+    .all-wrap {
+      position: relative; z-index: 10;
+      max-width: 1060px; margin: 0 auto;
+      padding: 0 2rem 2rem;
+    }
+    .all-title {
+      font-family: var(--display);
+      font-weight: 700; font-size: 1.4rem;
+      letter-spacing: -0.02em; color: var(--ink);
+      margin-bottom: 0.25rem;
+    }
+    .all-sub {
+      font-size: 0.85rem; color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+    .holiday-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.75rem;
+    }
+    .h-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+      border-left: 3px solid var(--h-col);
+    }
+    .h-card:hover { transform: translateY(-2px); border-color: var(--h-col); }
+    .h-card.active-card { background: var(--surface2); }
+    .h-card-top {
+      display: flex; align-items: center;
+      gap: 0.6rem; margin-bottom: 0.5rem;
+    }
+    .h-card-emoji { font-size: 1.4rem; }
+    .h-card-name {
+      font-weight: 600; font-size: 0.9rem; color: var(--ink);
+    }
+    .h-card-date {
+      font-family: var(--mono); font-size: 0.65rem;
+      color: var(--sub); letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    .h-card-days {
+      font-family: var(--display);
+      font-weight: 700; font-size: 1.6rem;
+      letter-spacing: -0.02em;
+      color: var(--h-col);
+    }
+    .h-card-days span {
+      font-family: var(--mono);
+      font-size: 0.65rem; font-weight: 400;
+      color: var(--sub); letter-spacing: 0.06em;
+      text-transform: uppercase; margin-left: 0.3rem;
+    }
+
+    /* ── MID AD ── */
+    .ad-mid {
+      position: relative; z-index: 10;
+      max-width: 1060px; margin: 0 auto 2rem;
+      padding: 0 2rem; text-align: center;
+    }
+
+    /* ── FAQ ── */
+    .faq-wrap {
+      position: relative; z-index: 10;
+      max-width: 700px; margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+    .faq-title {
+      font-family: var(--display);
+      font-weight: 700; font-size: 1.4rem;
+      letter-spacing: -0.02em; color: var(--ink);
+      margin-bottom: 1.25rem;
+    }
+    .faq-item { border-top: 1px solid var(--border); }
+    .faq-item:last-child { border-bottom: 1px solid var(--border); }
+    .faq-q {
+      width: 100%; background: none; border: none;
+      text-align: left; padding: 1rem 0;
+      font-family: var(--body); font-weight: 600;
+      font-size: 0.92rem; color: var(--ink);
+      cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+      transition: color 0.2s;
+    }
+    .faq-q:hover { color: var(--muted); }
+    .faq-arrow { font-family: var(--mono); font-size: 0.75rem; color: var(--sub); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-q.open .faq-arrow { transform: rotate(180deg); }
+    .faq-a {
+      font-size: 0.875rem; color: var(--muted);
+      line-height: 1.7; max-height: 0; overflow: hidden;
+      transition: max-height 0.3s ease, padding-bottom 0.2s;
+    }
+    .faq-a.open { max-height: 200px; padding-bottom: 1rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 10;
+      border-top: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      background: var(--surface);
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--mono); font-size: 0.68rem; color: var(--sub);
+      transition: background 0.4s, border-color 0.4s;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    footer a { color: var(--sub); text-decoration: underline; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      .digits-row { grid-template-columns: repeat(2, 1fr); }
+      .hero { padding: 2.5rem 1rem 1.5rem; }
+      .countdown-wrap, .all-wrap, .faq-wrap, .ad-mid { padding-left: 1rem; padding-right: 1rem; }
+      header { padding: 0.85rem 1rem; }
+    }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+  </style>
+</head>
+<body>
+
+<!-- SNOW CANVAS -->
+<canvas id="snow-canvas"></canvas>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">Holi<span class="logo-dot">·</span>days</div>
+  <div class="logo-tag">Countdown Timer</div>
+  <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">
+    <span id="theme-icon">🌙</span><span id="theme-label">Festive</span>
+  </button>
+</header>
+
+<!-- TOP AD -->
+<div class="ad-strip">
+  <!-- Google AdSense: replace this div -->
+  <div class="ad-slot">Advertisement — 728×90 Leaderboard</div>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Live · Updates every second · All major holidays</p>
+  <h1>How long until<br>the next holiday?</h1>
+  <p class="hero-sub">Pick any holiday below and watch the clock count down to the moment it arrives.</p>
+
+  <div class="holiday-pills" id="pill-row"></div>
+</section>
+
+<!-- MAIN COUNTDOWN -->
+<div class="countdown-wrap">
+  <div class="countdown-card" id="main-card">
+    <span class="countdown-emoji" id="cd-emoji">🎄</span>
+    <div class="countdown-name" id="cd-name">Christmas</div>
+    <div class="countdown-date" id="cd-date">December 25</div>
+    <div class="digits-row">
+      <div class="digit-block"><span class="digit-num" id="cd-days">--</span><span class="digit-label">Days</span></div>
+      <div class="digit-block"><span class="digit-num" id="cd-hours">--</span><span class="digit-label">Hours</span></div>
+      <div class="digit-block"><span class="digit-num" id="cd-mins">--</span><span class="digit-label">Minutes</span></div>
+      <div class="digit-block"><span class="digit-num" id="cd-secs">--</span><span class="digit-label">Seconds</span></div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="prog-start">Jan 1</span>
+        <span id="prog-pct">0% of the year gone</span>
+        <span id="prog-end">Dec 25</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ALL HOLIDAYS GRID -->
+<div class="all-wrap">
+  <h2 class="all-title">All upcoming holidays</h2>
+  <p class="all-sub">Click any card to set it as the main countdown.</p>
+  <div class="holiday-grid" id="holiday-grid"></div>
+</div>
+
+<!-- MID AD -->
+<div class="ad-mid">
+  <!-- Google AdSense: replace this div -->
+  <div class="ad-slot">Advertisement — 728×90 Leaderboard</div>
+</div>
+
+<!-- FAQ -->
+<div class="faq-wrap">
+  <h2 class="faq-title">Common questions</h2>
+
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">How accurate is the countdown? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">The countdown updates every second using your device's local clock. It counts down to midnight (00:00:00) on the date of the holiday in your local time zone, so it's as accurate as your device's clock.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">Why does Easter change every year? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Easter is a "moveable feast" calculated as the first Sunday after the first full moon following the spring equinox (March 21). This means it can fall anywhere between March 22 and April 25 each year.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">What happens when a holiday passes? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Once a holiday passes, the countdown automatically rolls forward to the same holiday next year. So on December 26th, the Christmas countdown immediately starts counting down to next Christmas.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">How many days until Christmas this year? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Select Christmas at the top of the page to see the live, exact countdown in days, hours, minutes and seconds. It updates in real time every second.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)">Are the holiday dates fixed or variable? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Most holidays like Christmas (Dec 25), New Year (Jan 1), Halloween (Oct 31) and Valentine's Day (Feb 14) are fixed. Easter, Thanksgiving (4th Thursday of November in the US) and Mother's Day (2nd Sunday of May) are calculated dynamically each year.</div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span>Holi·days · Free Holiday Countdown · Updates live every second</span>
+  <span>
+    <a href="#">Privacy Policy</a> &nbsp;·&nbsp;
+    <a href="#">Disclaimer</a>
+  </span>
+</footer>
+
+<script>
+  // ── HOLIDAYS ──
+  function getNextDate(month, day) {
+    const now = new Date();
+    let d = new Date(now.getFullYear(), month - 1, day);
+    if (d <= now) d = new Date(now.getFullYear() + 1, month - 1, day);
+    return d;
+  }
+
+  function getEaster(year) {
+    // Anonymous Gregorian algorithm
+    const a = year % 19, b = Math.floor(year / 100), c = year % 100;
+    const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25);
+    const g = Math.floor((b - f + 1) / 3), h = (19*a + b - d - g + 15) % 30;
+    const i = Math.floor(c / 4), k = c % 4;
+    const l = (32 + 2*e + 2*i - h - k) % 7;
+    const m = Math.floor((a + 11*h + 22*l) / 451);
+    const month = Math.floor((h + l - 7*m + 114) / 31);
+    const day   = ((h + l - 7*m + 114) % 31) + 1;
+    return new Date(year, month - 1, day);
+  }
+
+  function getNextEaster() {
+    const now = new Date();
+    let e = getEaster(now.getFullYear());
+    if (e <= now) e = getEaster(now.getFullYear() + 1);
+    return e;
+  }
+
+  function getNthWeekday(year, month, nth, weekday) {
+    // nth: 1-based, weekday: 0=Sun..6=Sat
+    let d = new Date(year, month - 1, 1);
+    let count = 0;
+    while (true) {
+      if (d.getDay() === weekday) { count++; if (count === nth) return d; }
+      d.setDate(d.getDate() + 1);
+    }
+  }
+
+  function getNextThanksgiving() {
+    const now = new Date();
+    let t = getNthWeekday(now.getFullYear(), 11, 4, 4); // 4th Thursday Nov
+    if (t <= now) t = getNthWeekday(now.getFullYear() + 1, 11, 4, 4);
+    return t;
+  }
+
+  function getNextMothersDay() {
+    const now = new Date();
+    let m = getNthWeekday(now.getFullYear(), 5, 2, 0); // 2nd Sunday May
+    if (m <= now) m = getNthWeekday(now.getFullYear() + 1, 5, 2, 0);
+    return m;
+  }
+
+  function getNextFathersDay() {
+    const now = new Date();
+    let f = getNthWeekday(now.getFullYear(), 6, 3, 0); // 3rd Sunday June
+    if (f <= now) f = getNthWeekday(now.getFullYear() + 1, 6, 3, 0);
+    return f;
+  }
+
+  const HOLIDAYS = [
+    { id:'christmas',    label:'Christmas',       emoji:'🎄', color:'#e03030', getDate: ()=>getNextDate(12,25) },
+    { id:'newyear',      label:'New Year',         emoji:'🎆', color:'#f59e0b', getDate: ()=>getNextDate(1,1)  },
+    { id:'halloween',    label:'Halloween',        emoji:'🎃', color:'#f97316', getDate: ()=>getNextDate(10,31) },
+    { id:'easter',       label:'Easter',           emoji:'🐣', color:'#84cc16', getDate: ()=>getNextEaster()   },
+    { id:'valentine',    label:"Valentine's Day",  emoji:'💝', color:'#ec4899', getDate: ()=>getNextDate(2,14) },
+    { id:'thanksgiving', label:'Thanksgiving',     emoji:'🦃', color:'#a16207', getDate: ()=>getNextThanksgiving() },
+    { id:'stpatrick',    label:"St Patrick's Day", emoji:'🍀', color:'#16a34a', getDate: ()=>getNextDate(3,17) },
+    { id:'mothersday',   label:"Mother's Day",     emoji:'💐', color:'#db2777', getDate: ()=>getNextMothersDay() },
+    { id:'fathersday',   label:"Father's Day",     emoji:'👔', color:'#2563eb', getDate: ()=>getNextFathersDay() },
+    { id:'bonfire',      label:'Bonfire Night',    emoji:'🔥', color:'#dc2626', getDate: ()=>getNextDate(11,5)  },
+    { id:'july4',        label:'July 4th',         emoji:'🇺🇸', color:'#1d4ed8', getDate: ()=>getNextDate(7,4)  },
+    { id:'xmaseve',      label:'Christmas Eve',    emoji:'🌟', color:'#d97706', getDate: ()=>getNextDate(12,24) },
+  ];
+
+  // ── STATE ──
+  let activeId = 'christmas';
+
+  function getActive() { return HOLIDAYS.find(h => h.id === activeId); }
+
+  function setActive(id) {
+    activeId = id;
+    document.querySelectorAll('.h-pill').forEach(p => p.classList.toggle('active', p.dataset.id === id));
+    document.querySelectorAll('.h-card').forEach(c => c.classList.toggle('active-card', c.dataset.id === id));
+    const h = getActive();
+    document.getElementById('main-card').style.setProperty('--h-color', h.color);
+    document.getElementById('cd-emoji').textContent = h.emoji;
+    document.getElementById('cd-name').textContent  = h.label;
+    const d = h.getDate();
+    document.getElementById('cd-date').textContent  =
+      d.toLocaleDateString('en-US', { month: 'long', day: 'numeric' });
+    tick();
+  }
+
+  // ── COUNTDOWN TICK ──
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function tick() {
+    const h   = getActive();
+    const now = new Date();
+    const target = h.getDate();
+    let diff = target - now;
+    if (diff < 0) diff = 0;
+
+    const days  = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins  = Math.floor((diff % 3600000)  / 60000);
+    const secs  = Math.floor((diff % 60000)    / 1000);
+
+    document.getElementById('cd-days').textContent  = days;
+    document.getElementById('cd-hours').textContent = pad(hours);
+    document.getElementById('cd-mins').textContent  = pad(mins);
+    document.getElementById('cd-secs').textContent  = pad(secs);
+
+    // Progress bar — from Jan 1 of this year to holiday date
+    const yearStart = new Date(now.getFullYear(), 0, 1);
+    const totalSpan = target - yearStart;
+    const elapsed   = now - yearStart;
+    const pct = Math.max(0, Math.min(100, (elapsed / totalSpan) * 100));
+    document.getElementById('prog-fill').style.width = pct.toFixed(1) + '%';
+    document.getElementById('prog-pct').textContent  = pct.toFixed(0) + '% of the way there';
+    document.getElementById('prog-start').textContent =
+      yearStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    document.getElementById('prog-end').textContent =
+      target.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+    // Update grid cards
+    HOLIDAYS.forEach(hol => {
+      const el = document.getElementById('days-' + hol.id);
+      if (!el) return;
+      const t2   = hol.getDate();
+      const diff2 = Math.max(0, t2 - new Date());
+      el.textContent = Math.floor(diff2 / 86400000);
+    });
+  }
+
+  // ── BUILD PILLS ──
+  const pillRow = document.getElementById('pill-row');
+  HOLIDAYS.forEach(h => {
+    const btn = document.createElement('button');
+    btn.className = 'h-pill' + (h.id === activeId ? ' active' : '');
+    btn.dataset.id = h.id;
+    btn.style.setProperty('--pill-col', h.color);
+    if (h.id === activeId) btn.style.background = h.color;
+    btn.innerHTML = `${h.emoji} ${h.label}`;
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.h-pill').forEach(p => {
+        p.style.background = '';
+        p.style.borderColor = '';
+      });
+      btn.style.background = h.color;
+      setActive(h.id);
+    });
+    pillRow.appendChild(btn);
+  });
+
+  // ── BUILD GRID ──
+  const grid = document.getElementById('holiday-grid');
+  // Sort by soonest
+  const sorted = [...HOLIDAYS].sort((a, b) => a.getDate() - b.getDate());
+  sorted.forEach(h => {
+    const card = document.createElement('div');
+    card.className = 'h-card' + (h.id === activeId ? ' active-card' : '');
+    card.dataset.id = h.id;
+    card.style.setProperty('--h-col', h.color);
+    const d = h.getDate();
+    const dateStr = d.toLocaleDateString('en-US', { weekday:'short', month:'long', day:'numeric', year:'numeric' });
+    const diff = Math.max(0, d - new Date());
+    const daysLeft = Math.floor(diff / 86400000);
+    card.innerHTML = `
+      <div class="h-card-top">
+        <span class="h-card-emoji">${h.emoji}</span>
+        <span class="h-card-name">${h.label}</span>
+      </div>
+      <div class="h-card-date">${dateStr}</div>
+      <div class="h-card-days" style="color:${h.color}">
+        <span id="days-${h.id}">${daysLeft}</span><span>days away</span>
+      </div>`;
+    card.addEventListener('click', () => {
+      document.querySelectorAll('.h-pill').forEach(p => {
+        p.style.background = '';
+        if (p.dataset.id === h.id) { p.style.background = h.color; }
+      });
+      setActive(h.id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+    grid.appendChild(card);
+  });
+
+  // ── INIT CARD COLOR ──
+  document.getElementById('main-card').style.setProperty('--h-color', getActive().color);
+
+  // ── TICK EVERY SECOND ──
+  tick();
+  setInterval(tick, 1000);
+
+  // ── THEME TOGGLE ──
+  function toggleTheme() {
+    const dark = document.body.classList.toggle('dark');
+    document.getElementById('theme-icon').textContent  = dark ? '☀️' : '🌙';
+    document.getElementById('theme-label').textContent = dark ? 'Light' : 'Festive';
+    if (dark) startSnow(); else stopSnow();
+  }
+
+  // ── SNOW ──
+  const canvas  = document.getElementById('snow-canvas');
+  const ctx     = canvas.getContext('2d');
+  let flakes    = [];
+  let snowFrame = null;
+
+  function resizeCanvas() {
+    canvas.width  = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function makeFlake() {
+    return {
+      x: Math.random() * canvas.width,
+      y: Math.random() * -canvas.height,
+      r: Math.random() * 3 + 1,
+      speed: Math.random() * 1.2 + 0.4,
+      drift: (Math.random() - 0.5) * 0.5,
+      opacity: Math.random() * 0.5 + 0.3,
+    };
+  }
+
+  function startSnow() {
+    flakes = Array.from({ length: 120 }, makeFlake);
+    animateSnow();
+  }
+
+  function stopSnow() {
+    if (snowFrame) { cancelAnimationFrame(snowFrame); snowFrame = null; }
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    flakes = [];
+  }
+
+  function animateSnow() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    flakes.forEach(f => {
+      ctx.beginPath();
+      ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(255,255,255,${f.opacity})`;
+      ctx.fill();
+      f.y += f.speed;
+      f.x += f.drift;
+      if (f.y > canvas.height + 10) {
+        f.y = -10;
+        f.x = Math.random() * canvas.width;
+      }
+    });
+    snowFrame = requestAnimationFrame(animateSnow);
+  }
+
+  // ── FAQ ──
+  function toggleFaq(btn) {
+    const ans    = btn.nextElementSibling;
+    const isOpen = ans.classList.contains('open');
+    document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
+    document.querySelectorAll('.faq-q').forEach(q => q.classList.remove('open'));
+    if (!isOpen) { ans.classList.add('open'); btn.classList.add('open'); }
+  }
+</script>
+</body>
+</html>
