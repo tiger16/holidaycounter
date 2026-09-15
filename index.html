@@ -3,8 +3,18 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Holiday Countdown — Days Until Christmas, New Year, Easter, Halloween & More</title>
-  <meta name="description" content="Free holiday countdown timer. See exactly how many days, hours, minutes and seconds until Christmas, New Year, Easter, Halloween, Thanksgiving and more."/>
+  <title>Holiday Countdown: Days Until Christmas, New Year, Easter, Halloween & More</title>
+  <meta name="description" content="Free live countdown to Christmas, New Year, Easter, Halloween, Thanksgiving and more, with holiday dates for 2026 to 2028, the history behind each holiday, and how moveable dates like Easter are calculated."/>
+  <meta name="author" content="Holi·days"/>
+  <meta name="robots" content="index, follow"/>
+  <meta name="theme-color" content="#fdf6ee"/>
+  <!-- Replace YOUR-DOMAIN with your real domain -->
+  <link rel="canonical" href="https://YOUR-DOMAIN/"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Holiday Countdown: Days Until Christmas, Easter, Halloween & More"/>
+  <meta property="og:description" content="Live countdowns, holiday dates for 2026 to 2028, and the story behind every holiday."/>
+  <meta property="og:url" content="https://YOUR-DOMAIN/"/>
+  <!-- Google AdSense: paste your AdSense <script> tag here (the one from AdSense > Sites) -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -327,11 +337,11 @@
     .faq-wrap {
       position: relative; z-index: 10;
       max-width: 700px; margin: 0 auto;
-      padding: 0 2rem 5rem;
+      padding: 3.5rem 2rem 3rem;
     }
     .faq-title {
       font-family: var(--display);
-      font-weight: 700; font-size: 1.4rem;
+      font-weight: 900; font-size: clamp(1.6rem, 3.5vw, 2.1rem);
       letter-spacing: -0.02em; color: var(--ink);
       margin-bottom: 1.25rem;
     }
@@ -354,7 +364,9 @@
       line-height: 1.7; max-height: 0; overflow: hidden;
       transition: max-height 0.3s ease, padding-bottom 0.2s;
     }
-    .faq-a.open { max-height: 200px; padding-bottom: 1rem; }
+    .faq-a.open { padding-bottom: 1rem; }
+    .faq-a a { color: var(--ink); }
+    code { font-family: var(--mono); font-size: 0.85em; background: var(--surface2); padding: 0.1em 0.35em; border-radius: 4px; }
 
     /* ── FOOTER ── */
     footer {
@@ -369,12 +381,201 @@
     }
     footer a { color: var(--sub); text-decoration: underline; }
 
+    /* ── SITE NAV ── */
+    .site-nav { display: flex; gap: 1.1rem; margin-left: 1.5rem; }
+    .site-nav a {
+      font-size: 0.82rem; font-weight: 500; color: var(--muted);
+      text-decoration: none; padding: 0.2rem 0;
+      border-bottom: 1.5px solid transparent;
+    }
+    .site-nav a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+    a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
+    /* ── CONTENT SECTIONS ── */
+    .section {
+      position: relative; z-index: 10;
+      max-width: 1060px; margin: 0 auto;
+      padding: 3.5rem 2rem 1rem;
+    }
+    .section > h2 {
+      font-family: var(--display);
+      font-weight: 900; font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+      letter-spacing: -0.02em; line-height: 1.15;
+      color: var(--ink); margin-bottom: 0.6rem;
+    }
+    .lede {
+      font-size: 1rem; color: var(--muted);
+      max-width: 64ch; line-height: 1.7; margin-bottom: 1.75rem;
+    }
+    .prose p, .prose li {
+      font-size: 0.95rem; color: var(--muted);
+      line-height: 1.75; max-width: 68ch;
+    }
+    .prose p + p { margin-top: 0.85rem; }
+    .prose strong { color: var(--ink); font-weight: 600; }
+    .prose a, .lede a { color: var(--ink); }
+
+    .about-tool {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem 3rem;
+    }
+
+    /* dates table */
+    .table-scroll {
+      overflow-x: auto; border: 1px solid var(--border);
+      border-radius: 12px; background: var(--surface);
+      transition: background 0.4s, border-color 0.4s;
+    }
+    .dates-table { width: 100%; border-collapse: collapse; min-width: 640px; font-size: 0.88rem; }
+    .dates-table th, .dates-table td {
+      text-align: left; padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .dates-table thead th {
+      font-family: var(--display); font-weight: 700; font-size: 0.95rem;
+      color: var(--ink); background: var(--surface2);
+    }
+    .dates-table tbody tr:last-child td, .dates-table tbody tr:last-child th { border-bottom: none; }
+    .dates-table tbody th { font-weight: 600; color: var(--ink); white-space: nowrap; }
+    .dates-table td { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .dates-table td.rule { white-space: normal; font-size: 0.8rem; color: var(--sub); }
+    .table-note { font-size: 0.8rem; color: var(--sub); margin-top: 0.75rem; max-width: 68ch; }
+
+    /* guide */
+    .guide-layout {
+      display: grid; grid-template-columns: 190px 1fr; gap: 3rem;
+      align-items: start;
+    }
+    .guide-toc { position: sticky; top: 1.25rem; }
+    .guide-toc p {
+      font-family: var(--display); font-weight: 700;
+      font-size: 0.95rem; color: var(--ink); margin-bottom: 0.6rem;
+    }
+    .guide-toc ol { list-style: none; border-left: 1px solid var(--border); }
+    .guide-toc a {
+      display: block; padding: 0.28rem 0 0.28rem 0.9rem;
+      font-size: 0.83rem; color: var(--muted); text-decoration: none;
+      margin-left: -1px; border-left: 2px solid transparent;
+    }
+    .guide-toc a:hover { color: var(--ink); border-left-color: var(--ink); }
+
+    .guide-article {
+      border-top: 1px solid var(--border);
+      padding: 2.25rem 0 2rem;
+      scroll-margin-top: 1rem;
+    }
+    .guide-article:first-child { border-top: none; padding-top: 0; }
+    .guide-article h3 {
+      font-family: var(--display); font-weight: 900;
+      font-size: 1.55rem; letter-spacing: -0.015em;
+      color: var(--ink); line-height: 1.2;
+    }
+    .guide-article h3 .em { margin-right: 0.35rem; }
+    .rule-line {
+      font-size: 0.85rem; color: var(--h-col); font-weight: 600;
+      margin: 0.3rem 0 1rem;
+    }
+    .guide-article h4 {
+      font-size: 0.92rem; font-weight: 600; color: var(--ink);
+      margin: 1.3rem 0 0.35rem;
+    }
+    .good-to-know {
+      margin-top: 1.2rem; padding: 0.85rem 1.1rem;
+      background: var(--surface2); border-radius: 8px;
+      border-left: 3px solid var(--h-col);
+      font-size: 0.88rem; color: var(--muted); line-height: 1.65;
+      max-width: 68ch;
+      transition: background 0.4s;
+    }
+    .good-to-know b { color: var(--ink); }
+    .guide-cta {
+      display: inline-block; margin-top: 1.1rem;
+      font-size: 0.85rem; font-weight: 600; color: var(--h-col);
+      text-decoration: none; border-bottom: 1.5px solid currentColor;
+    }
+
+    /* maths */
+    .method-grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 2rem 3rem; }
+    .method-grid > *, .plan-grid > *, .about-tool > *, .guide-layout > * { min-width: 0; }
+    .method-grid h3, .plan-grid h3 {
+      font-family: var(--display); font-weight: 700;
+      font-size: 1.2rem; color: var(--ink); margin-bottom: 0.5rem;
+    }
+    .formula {
+      font-family: var(--mono); font-size: 0.8rem; line-height: 1.8;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.9rem 1.1rem; margin: 0.9rem 0;
+      overflow-x: auto; white-space: pre; color: var(--ink);
+      transition: background 0.4s, border-color 0.4s;
+    }
+    .formula .c { color: var(--sub); }
+    .method-wide { grid-column: 1 / -1; }
+
+    /* planning timeline */
+    .plan-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 2rem 3rem; }
+    .timeline { list-style: none; counter-reset: step; }
+    .timeline li {
+      position: relative; padding: 0 0 1.25rem 2.6rem;
+      counter-increment: step;
+    }
+    .timeline li::before {
+      content: counter(step);
+      position: absolute; left: 0; top: 0;
+      width: 1.75rem; height: 1.75rem; border-radius: 50%;
+      background: var(--ink); color: var(--bg);
+      font-family: var(--display); font-weight: 700; font-size: 0.85rem;
+      display: grid; place-items: center;
+    }
+    .timeline li::after {
+      content: ''; position: absolute; left: 0.86rem; top: 1.9rem; bottom: 0.2rem;
+      width: 1px; background: var(--border);
+    }
+    .timeline li:last-child::after { display: none; }
+    .timeline b { display: block; color: var(--ink); font-size: 0.95rem; margin-bottom: 0.15rem; }
+    .idea-list { list-style: none; }
+    .idea-list li { padding: 0.7rem 0; border-top: 1px solid var(--border); }
+    .idea-list li:first-child { border-top: none; padding-top: 0; }
+    .idea-list b { color: var(--ink); }
+
+    /* facts */
+    .facts {
+      list-style: none;
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 0 2.5rem;
+    }
+    .facts li {
+      padding: 1rem 0; border-top: 1px solid var(--border);
+      font-size: 0.92rem; color: var(--muted); line-height: 1.65;
+    }
+    .facts b { color: var(--ink); }
+
+    /* about note */
+    .about-note {
+      position: relative; z-index: 10;
+      max-width: 700px; margin: 0 auto; padding: 0 2rem 4rem;
+      font-size: 0.85rem; color: var(--muted); line-height: 1.7;
+    }
+    .about-note h2 {
+      font-family: var(--display); font-weight: 700; font-size: 1.1rem;
+      color: var(--ink); margin-bottom: 0.4rem;
+    }
+    .about-note a { color: var(--ink); }
+
     /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .guide-layout { grid-template-columns: 1fr; gap: 1.5rem; }
+      .guide-toc { position: static; }
+      .guide-toc ol { display: flex; flex-wrap: wrap; gap: 0.4rem; border-left: none; }
+      .guide-toc a { border: 1px solid var(--border); border-radius: 20px; padding: 0.25rem 0.75rem; margin: 0; }
+      .about-tool, .method-grid, .plan-grid { grid-template-columns: minmax(0,1fr); }
+      .site-nav { display: none; }
+    }
     @media (max-width: 600px) {
       .digits-row { grid-template-columns: repeat(2, 1fr); }
       .hero { padding: 2.5rem 1rem 1.5rem; }
-      .countdown-wrap, .all-wrap, .faq-wrap, .ad-mid { padding-left: 1rem; padding-right: 1rem; }
+      .countdown-wrap, .all-wrap, .faq-wrap, .section, .about-note { padding-left: 1rem; padding-right: 1rem; }
+      .section { padding-top: 2.5rem; }
       header { padding: 0.85rem 1rem; }
+      .logo-tag { display: none; }
     }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
   </style>
@@ -388,16 +589,19 @@
 <header>
   <div class="logo">Holi<span class="logo-dot">·</span>days</div>
   <div class="logo-tag">Countdown Timer</div>
+  <nav class="site-nav" aria-label="Page sections">
+    <a href="#dates">Dates</a>
+    <a href="#guide">Holiday guide</a>
+    <a href="#maths">How it works</a>
+    <a href="#planning">Planning</a>
+    <a href="#faq">FAQ</a>
+  </nav>
   <button class="theme-toggle" id="theme-btn" onclick="toggleTheme()">
     <span id="theme-icon">🌙</span><span id="theme-label">Festive</span>
   </button>
 </header>
 
-<!-- TOP AD -->
-<div class="ad-strip">
-  <!-- Google AdSense: replace this div -->
-  <div class="ad-slot">Advertisement — 728×90 Leaderboard</div>
-</div>
+<!-- Top AdSense unit can go here after approval. Don't show empty placeholder boxes while under review. -->
 
 <!-- HERO -->
 <section class="hero">
@@ -438,117 +642,372 @@
   <div class="holiday-grid" id="holiday-grid"></div>
 </div>
 
-<!-- HOLIDAY GUIDE -->
-<div class="all-wrap" style="padding-top:1rem;">
-  <h2 class="all-title">Where these holidays come from</h2>
-  <p class="all-sub">A quick origin story for each date on this page — and why some move around the calendar while others don't.</p>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.1rem 2rem;margin-top:1rem;">
-
-    <div>
-      <h3 style="font-family:var(--display);font-weight:700;font-size:0.98rem;color:var(--ink);margin-bottom:0.3rem;">🎄 Christmas — December 25</h3>
-      <p style="font-size:0.83rem;color:var(--muted);line-height:1.65;">Christmas marks the traditional birth of Jesus Christ and has been celebrated on December 25 since the 4th century. The date likely absorbed earlier midwinter festivals like the Roman Saturnalia, which is part of why so many pre-Christian winter traditions (evergreens, feasting, gift-giving) became attached to it.</p>
-    </div>
-
-    <div>
-      <h3 style="font-family:var(--display);font-weight:700;font-size:0.98rem;color:var(--ink);margin-bottom:0.3rem;">🎆 New Year — January 1</h3>
-      <p style="font-size:0.83rem;color:var(--muted);line-height:1.65;">January 1 became the start of the year under the Julian calendar in 45 BC, named for Janus, the Roman god of doorways and new beginnings — fitting for a holiday about looking both backward and forward.</p>
-    </div>
-
-    <div>
-      <h3 style="font-family:var(--display);font-weight:700;font-size:0.98rem;color:var(--ink);margin-bottom:0.3rem;">🎃 Halloween — October 31</h3>
-      <p style="font-size:0.83rem;color:var(--muted);line-height:1.65;">Halloween traces back to the Gaelic festival of Samhain, which marked the end of harvest season and the point when the boundary between worlds was believed to thin. Costumes and carved lanterns both descend from Samhain-era customs meant to ward off wandering spirits.</p>
-    </div>
-
-    <div>
-      <h3 style="font-family:var(--display);font-weight:700;font-size:0.98rem;color:var(--ink);margin-bottom:0.3rem;">🐣 Easter — date varies</h3>
-      <p style="font-size:0.83rem;color:var(--muted);line-height:1.65;">Easter is a moveable feast: the first Sunday after the first full moon following the spring equinox. That single rule is why it can land anywhere between March 22 and April 25, and why this countdown recalculates it fresh every year rather than using a fixed date.</p>
-    </div>
-
-    <div>
-      <h3 style="font-family:var(--display);font-weight:700;font-size:0.98rem;color:var(--ink);margin-bottom:0.3rem;">💝 Valentine's Day — February 14</h3>
-      <p style="font-size:0.83rem;color:var(--muted);line-height:1.65;">Named for Saint Valentine, an early Christian martyr, the day didn't become associated with romantic love until the medieval period, when poets like Chaucer linked it to the start of birds' mating season.</p>
-    </div>
-
-    <div>
-      <h3 style="font-family:var(--display);font-weight:700;font-size:0.98rem;color:var(--ink);margin-bottom:0.3rem;">🦃 Thanksgiving — 4th Thursday of November</h3>
-      <p style="font-size:0.83rem;color:var(--muted);line-height:1.65;">The US holiday commemorates a 1621 harvest celebration shared by Plymouth colonists and the Wampanoag people. It wasn't fixed to the fourth Thursday of November until a 1941 act of Congress, which finally standardized a date that had drifted for decades.</p>
-    </div>
-
-    <div>
-      <h3 style="font-family:var(--display);font-weight:700;font-size:0.98rem;color:var(--ink);margin-bottom:0.3rem;">🍀 St Patrick's Day — March 17</h3>
-      <p style="font-size:0.83rem;color:var(--muted);line-height:1.65;">Originally a religious feast day marking the death of Ireland's patron saint, St Patrick's Day grew into a broader celebration of Irish culture and heritage, especially among diaspora communities in the US.</p>
-    </div>
-
-    <div>
-      <h3 style="font-family:var(--display);font-weight:700;font-size:0.98rem;color:var(--ink);margin-bottom:0.3rem;">💐 Mother's Day — 2nd Sunday of May</h3>
-      <p style="font-size:0.83rem;color:var(--muted);line-height:1.65;">The modern US holiday was formalized in 1914, largely through the efforts of activist Anna Jarvis. It lands on a different calendar date each year because it's defined by weekday, not a fixed number.</p>
-    </div>
-
-    <div>
-      <h3 style="font-family:var(--display);font-weight:700;font-size:0.98rem;color:var(--ink);margin-bottom:0.3rem;">👔 Father's Day — 3rd Sunday of June</h3>
-      <p style="font-size:0.83rem;color:var(--muted);line-height:1.65;">First proposed shortly after Mother's Day gained traction, Father's Day took much longer to become an official US holiday — it wasn't permanently established until 1972.</p>
-    </div>
-
-    <div>
-      <h3 style="font-family:var(--display);font-weight:700;font-size:0.98rem;color:var(--ink);margin-bottom:0.3rem;">🔥 Bonfire Night — November 5</h3>
-      <p style="font-size:0.83rem;color:var(--muted);line-height:1.65;">Also called Guy Fawkes Night, this UK tradition marks the failed 1605 Gunpowder Plot to blow up Parliament. Bonfires and fireworks have marked the date since the very year it happened.</p>
-    </div>
-
-    <div>
-      <h3 style="font-family:var(--display);font-weight:700;font-size:0.98rem;color:var(--ink);margin-bottom:0.3rem;">🇺🇸 July 4th — July 4</h3>
-      <p style="font-size:0.83rem;color:var(--muted);line-height:1.65;">Independence Day commemorates the 1776 adoption of the Declaration of Independence by the Continental Congress, formally announcing the thirteen American colonies' break from British rule.</p>
-    </div>
-
+<noscript>
+  <div class="section prose">
+    <p><strong>The live countdown needs JavaScript.</strong> You can still use the date table and holiday guide below to see exactly when each holiday falls.</p>
   </div>
-</div>
+</noscript>
 
-<!-- MID AD -->
-<div class="ad-mid">
-  <!-- Google AdSense: replace this div -->
-  <div class="ad-slot">Advertisement — 728×90 Leaderboard</div>
-</div>
+<!-- ABOUT THE TOOL -->
+<section class="section" id="how-it-works">
+  <h2>A countdown that works out the dates for you</h2>
+  <div class="about-tool prose">
+    <div>
+      <p>Most holidays sit on the same date every year, but several of the biggest ones don't. Easter follows the moon, Thanksgiving follows the weekday, and Mother's Day depends on which country you're in. This page calculates every date from its official rule each time you load it, so the numbers stay correct next year and the year after without anyone updating them by hand.</p>
+      <p>Pick a holiday from the buttons or cards above and the main clock shows the time left to the stroke of midnight when that day begins, measured on your own device's clock and time zone.</p>
+    </div>
+    <div>
+      <p><strong>Days</strong> is the number of full 24-hour periods left. <strong>Hours, minutes and seconds</strong> are what remains after that, so a clock reading "3 days, 20 hours" means the holiday starts in just under four days.</p>
+      <p><strong>The progress bar</strong> shows how much of the stretch from January 1 to the holiday has already passed. When a holiday is over, its countdown rolls straight on to the next year's date.</p>
+      <p>To bookmark or share one countdown, add <code>?h=</code> and the holiday name to the address, for example <a href="?h=halloween">?h=halloween</a> or <a href="?h=thanksgiving">?h=thanksgiving</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- DATES TABLE -->
+<section class="section" id="dates">
+  <h2>Holiday dates for 2026, 2027 and 2028</h2>
+  <p class="lede">Every date on this page for the next three years, with the rule that decides it. Handy for booking time off, planning travel, or settling an argument about when Easter is.</p>
+  <div class="table-scroll">
+    <table class="dates-table">
+      <thead>
+        <tr><th scope="col">Holiday</th><th scope="col">How the date is set</th><th scope="col" class="yr">2026</th><th scope="col" class="yr">2027</th><th scope="col" class="yr">2028</th></tr>
+      </thead>
+      <tbody id="dates-body">
+        <tr><th scope="row">🎆 New Year's Day</th><td class="rule">Fixed: January 1</td><td>Thu, Jan 1</td><td>Fri, Jan 1</td><td>Sat, Jan 1</td></tr>
+        <tr><th scope="row">💝 Valentine's Day</th><td class="rule">Fixed: February 14</td><td>Sat, Feb 14</td><td>Sun, Feb 14</td><td>Mon, Feb 14</td></tr>
+        <tr><th scope="row">🍀 St Patrick's Day</th><td class="rule">Fixed: March 17</td><td>Tue, Mar 17</td><td>Wed, Mar 17</td><td>Fri, Mar 17</td></tr>
+        <tr><th scope="row">🐣 Easter Sunday</th><td class="rule">First Sunday after the church's spring full moon</td><td>Sun, Apr 5</td><td>Sun, Mar 28</td><td>Sun, Apr 16</td></tr>
+        <tr><th scope="row">💐 Mother's Day (US)</th><td class="rule">Second Sunday of May</td><td>Sun, May 10</td><td>Sun, May 9</td><td>Sun, May 14</td></tr>
+        <tr><th scope="row">👔 Father's Day (US/UK)</th><td class="rule">Third Sunday of June</td><td>Sun, Jun 21</td><td>Sun, Jun 20</td><td>Sun, Jun 18</td></tr>
+        <tr><th scope="row">🇺🇸 Independence Day</th><td class="rule">Fixed: July 4</td><td>Sat, Jul 4</td><td>Sun, Jul 4</td><td>Tue, Jul 4</td></tr>
+        <tr><th scope="row">🎃 Halloween</th><td class="rule">Fixed: October 31</td><td>Sat, Oct 31</td><td>Sun, Oct 31</td><td>Tue, Oct 31</td></tr>
+        <tr><th scope="row">🔥 Bonfire Night</th><td class="rule">Fixed: November 5</td><td>Thu, Nov 5</td><td>Fri, Nov 5</td><td>Sun, Nov 5</td></tr>
+        <tr><th scope="row">🦃 Thanksgiving (US)</th><td class="rule">Fourth Thursday of November</td><td>Thu, Nov 26</td><td>Thu, Nov 25</td><td>Thu, Nov 23</td></tr>
+        <tr><th scope="row">🌟 Christmas Eve</th><td class="rule">Fixed: December 24</td><td>Thu, Dec 24</td><td>Fri, Dec 24</td><td>Sun, Dec 24</td></tr>
+        <tr><th scope="row">🎄 Christmas Day</th><td class="rule">Fixed: December 25</td><td>Fri, Dec 25</td><td>Sat, Dec 25</td><td>Mon, Dec 25</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="table-note">Related dates people often ask about: Good Friday falls two days before Easter (Apr 3, 2026; Mar 26, 2027; Apr 14, 2028). UK Mothering Sunday is three weeks before Easter (Mar 15, 2026; Mar 7, 2027; Mar 26, 2028). Canadian Thanksgiving is the second Monday of October (Oct 12, 2026; Oct 11, 2027; Oct 9, 2028). When a fixed-date public holiday lands on a weekend, the day off is often moved to a nearby weekday, but the holiday itself, and this countdown, stay on the calendar date.</p>
+</section>
+
+<!-- HOLIDAY GUIDE -->
+<section class="section" id="guide">
+  <h2>The holiday guide</h2>
+  <p class="lede">Where each holiday came from, how it's celebrated in different parts of the world, and the practical details worth knowing before the day arrives. Listed in calendar order.</p>
+
+  <div class="guide-layout">
+    <nav class="guide-toc" aria-label="Holiday guide contents">
+      <p>In this guide</p>
+      <ol>
+        <li><a href="#guide-newyear">New Year</a></li>
+        <li><a href="#guide-valentine">Valentine's Day</a></li>
+        <li><a href="#guide-stpatrick">St Patrick's Day</a></li>
+        <li><a href="#guide-easter">Easter</a></li>
+        <li><a href="#guide-mothersday">Mother's Day</a></li>
+        <li><a href="#guide-fathersday">Father's Day</a></li>
+        <li><a href="#guide-july4">July 4th</a></li>
+        <li><a href="#guide-halloween">Halloween</a></li>
+        <li><a href="#guide-bonfire">Bonfire Night</a></li>
+        <li><a href="#guide-thanksgiving">Thanksgiving</a></li>
+        <li><a href="#guide-xmaseve">Christmas Eve</a></li>
+        <li><a href="#guide-christmas">Christmas</a></li>
+      </ol>
+    </nav>
+
+    <div class="guide-body prose">
+
+      <article class="guide-article" id="guide-newyear" style="--h-col:#d97706">
+        <h3><span class="em">🎆</span>New Year's Day</h3>
+        <p class="rule-line">Fixed date: January 1</p>
+        <p>Starting the year in January is a Roman idea. From 153 BC, Rome's consuls took office on January 1, and Julius Caesar's calendar reform, which took effect in 45 BC, kept that as the official start of the year. The month itself is named after Janus, the two-faced god of doorways who looks both backward and forward.</p>
+        <p>The date wasn't universal for long. Much of medieval Europe began the year on March 25 instead, and England kept doing so until the Calendar Act of 1750 moved the legal new year back to January 1 from 1752 onward.</p>
+        <h4>Around the world</h4>
+        <p>In Spain, people eat twelve grapes, one on each chime of midnight, for luck in each month ahead. Scotland's Hogmanay includes "first-footing", where the first visitor across the threshold after midnight is meant to bring good fortune for the year. New York's Times Square ball has dropped since 1907. Many cultures also keep a second new year on their own calendar: Lunar New Year falls between January 21 and February 20, Nowruz arrives with the March equinox, and Rosh Hashanah comes in September or October.</p>
+        <p class="good-to-know"><b>Good to know:</b> midnight doesn't arrive everywhere at once. Kiribati's Line Islands, at UTC+14, welcome the new year first, while American Samoa, at UTC−11, is among the last inhabited places to do so, a full 25 hours later. This countdown always uses your local midnight.</p>
+        <a class="guide-cta" href="?h=newyear" data-h="newyear">Count down to New Year</a>
+      </article>
+
+      <article class="guide-article" id="guide-valentine" style="--h-col:#db2777">
+        <h3><span class="em">💝</span>Valentine's Day</h3>
+        <p class="rule-line">Fixed date: February 14</p>
+        <p>The day takes its name from Saint Valentine, although early church records mention more than one martyr of that name, and little is known about any of them for certain. Pope Gelasius I set aside February 14 for Valentine around AD 496. A link to the Roman festival of Lupercalia, held in mid-February, is often claimed, but historians disagree about how direct it is.</p>
+        <p>The romantic connection appears much later. In the 1380s, Geoffrey Chaucer's poem <em>Parlement of Foules</em> tied Valentine's Day to birds choosing their mates, and from there it spread through courtly love poetry. One of the oldest surviving valentines was written in 1415 by Charles, Duke of Orléans, while he was held prisoner in the Tower of London. Printed cards took off in the 1840s, when Esther Howland began producing lace-trimmed valentines in Massachusetts.</p>
+        <h4>Around the world</h4>
+        <p>In Japan, women traditionally give chocolate to men on February 14 and receive gifts in return a month later on White Day, March 14. Finland and Estonia treat the day as a celebration of friendship. Wales has its own patron saint of lovers, St Dwynwen, honoured on January 25, and Brazil celebrates Dia dos Namorados on June 12 instead.</p>
+        <p class="good-to-know"><b>Good to know:</b> restaurants book up early, especially when February 14 falls on a Friday or Saturday. In 2026 it's a Saturday and in 2027 a Sunday, so weekend demand will run high both years.</p>
+        <a class="guide-cta" href="?h=valentine" data-h="valentine">Count down to Valentine's Day</a>
+      </article>
+
+      <article class="guide-article" id="guide-stpatrick" style="--h-col:#16a34a">
+        <h3><span class="em">🍀</span>St Patrick's Day</h3>
+        <p class="rule-line">Fixed date: March 17</p>
+        <p>Patrick was a 5th-century missionary born in Roman Britain. According to his own writings, he was captured by raiders as a teenager and enslaved in Ireland, escaped years later, and eventually returned as a missionary. March 17 is traditionally given as the date of his death, and it became an official feast day in the church calendar in the early 1600s.</p>
+        <p>The large public celebrations grew up largely outside Ireland, among emigrant communities. Records show observances in Boston in 1737 and a parade in New York in 1762, and Chicago has dyed its river green every year since 1962. Blue, not green, was the colour originally associated with the saint. Green took over through its links with Irish nationalism and the shamrock, which legend says Patrick used to explain the Holy Trinity.</p>
+        <h4>Around the world</h4>
+        <p>It is a public holiday in the Republic of Ireland and Northern Ireland, and on the Caribbean island of Montserrat, where many residents have Irish ancestry. Cities from Sydney to Tokyo hold parades, and landmarks around the world are lit green for the evening.</p>
+        <p class="good-to-know"><b>Good to know:</b> if March 17 falls during Holy Week, the church moves the religious feast to another day, as happened in 2008. Parades and public holidays stay on the 17th, or on the nearest weekend for many city parades.</p>
+        <a class="guide-cta" href="?h=stpatrick" data-h="stpatrick">Count down to St Patrick's Day</a>
+      </article>
+
+      <article class="guide-article" id="guide-easter" style="--h-col:#65a30d">
+        <h3><span class="em">🐣</span>Easter</h3>
+        <p class="rule-line">Moveable: between March 22 and April 25</p>
+        <p>Easter celebrates the resurrection of Jesus and is the oldest and most important feast in the Christian calendar. Early churches disagreed about when to hold it, and the Council of Nicaea in AD 325 set out to agree on a common date. The rule that emerged is that Easter is the first Sunday after the church's full moon that falls on or after March 21. The "full moon" here comes from fixed tables rather than astronomical observation, which is why it can occasionally differ by a day or so from the real sky.</p>
+        <p>Because the rule combines a lunar cycle with the seven-day week, Easter can fall on any date from March 22 to April 25. The earliest possible date last happened in 1818 and won't come again until 2285. The latest possible date last occurred in 1943 and returns in 2038.</p>
+        <h4>Traditions</h4>
+        <p>Eggs became a symbol of new life, and since many Christians traditionally gave up eggs for Lent, Easter was the moment to eat and decorate them again. Ukraine's intricately patterned pysanky are among the best-known examples. The Easter Bunny, or Osterhase, came to America with German immigrants in 18th-century Pennsylvania, and the White House has hosted an Easter Egg Roll on its lawn since 1878.</p>
+        <h4>Around the world</h4>
+        <p>Most Orthodox churches calculate Easter using the older Julian calendar, so their Easter usually falls later. Orthodox Easter is April 12 in 2026 and May 2 in 2027, but in 2028 both traditions celebrate on the same day, April 16.</p>
+        <p class="good-to-know"><b>Good to know:</b> Easter is really a long weekend in many countries. Good Friday is a public holiday across the UK, Australia, Canada and much of Europe, and Easter Monday is a holiday in England, Wales, Northern Ireland, Ireland, Australia and many European countries, though not in Scotland.</p>
+        <a class="guide-cta" href="?h=easter" data-h="easter">Count down to Easter</a>
+      </article>
+
+      <article class="guide-article" id="guide-mothersday" style="--h-col:#db2777">
+        <h3><span class="em">💐</span>Mother's Day</h3>
+        <p class="rule-line">US: second Sunday of May</p>
+        <p>The American holiday owes its existence mostly to Anna Jarvis of West Virginia. After her mother died in 1905, she campaigned for a day to honour mothers, and the first official observances took place in 1908 in Grafton, West Virginia, and Philadelphia. President Woodrow Wilson made it a national observance in 1914. Jarvis later spent years fighting the commercialisation of the day she had created, objecting especially to printed cards in place of handwritten letters.</p>
+        <h4>Around the world</h4>
+        <p>Canada, Australia, Japan, Germany, Italy and many other countries also use the second Sunday of May. Mexico and much of Central America celebrate on May 10 whatever the weekday. The UK's Mothering Sunday is a separate tradition: it falls on the fourth Sunday of Lent, exactly three weeks before Easter, and began as the day people returned to their "mother church", the main church of their area.</p>
+        <p class="good-to-know"><b>Good to know:</b> this countdown follows the US date. UK readers should plan for Mothering Sunday instead: March 7 in 2027 and March 26 in 2028. Mother's Day is one of the busiest days of the year for restaurants and florists, so booking and ordering a week or two early is worthwhile.</p>
+        <a class="guide-cta" href="?h=mothersday" data-h="mothersday">Count down to Mother's Day</a>
+      </article>
+
+      <article class="guide-article" id="guide-fathersday" style="--h-col:#2563eb">
+        <h3><span class="em">👔</span>Father's Day</h3>
+        <p class="rule-line">US, UK and Canada: third Sunday of June</p>
+        <p>The first observances came shortly after Mother's Day started gaining support. A memorial service for fathers was held in Fairmont, West Virginia, in 1908, and in 1910 Sonora Smart Dodd organised a Father's Day in Spokane, Washington, to honour her father, a Civil War veteran who had raised six children alone. The idea spread slowly. President Calvin Coolidge endorsed it in 1924, Lyndon Johnson proclaimed the third Sunday of June in 1966, and Richard Nixon signed it into law as a permanent national observance in 1972.</p>
+        <h4>Around the world</h4>
+        <p>Australia and New Zealand celebrate on the first Sunday in September. Spain, Italy and Portugal mark it on March 19, the feast of Saint Joseph. In Germany, Vatertag coincides with Ascension Day, forty days after Easter, and Thailand has traditionally celebrated on December 5, the birthday of the late King Bhumibol.</p>
+        <p class="good-to-know"><b>Good to know:</b> Father's Day falls between June 15 and June 21. Online orders for the weekend itself tend to be the most expensive to ship, so it pays to order gifts early in the month.</p>
+        <a class="guide-cta" href="?h=fathersday" data-h="fathersday">Count down to Father's Day</a>
+      </article>
+
+      <article class="guide-article" id="guide-july4" style="--h-col:#1d4ed8">
+        <h3><span class="em">🇺🇸</span>Independence Day</h3>
+        <p class="rule-line">Fixed date: July 4</p>
+        <p>The Continental Congress actually voted for independence from Britain on July 2, 1776, and John Adams predicted that July 2 would be the date Americans celebrated. It was July 4, when Congress approved the final wording of the Declaration of Independence, that stuck. Most delegates didn't sign the document until August 2.</p>
+        <p>Fireworks were part of the celebration from the start: Philadelphia marked the first anniversary in 1777 with bells, bonfires and fireworks. Congress made July 4 a federal holiday in 1870. The date carries some remarkable coincidences too. Thomas Jefferson and John Adams both died on July 4, 1826, the 50th anniversary, and James Monroe died on July 4 five years later. Calvin Coolidge was born on July 4, 1872.</p>
+        <p class="good-to-know"><b>Good to know:</b> when July 4 falls on a Saturday, as it does in 2026, the federal day off moves to Friday, July 3. When it's a Sunday, as in 2027, the day off moves to Monday, July 5. Fireworks shows usually stay on the 4th itself, and 2026 marks the 250th anniversary, so expect bigger events and heavier travel than usual.</p>
+        <a class="guide-cta" href="?h=july4" data-h="july4">Count down to July 4th</a>
+      </article>
+
+      <article class="guide-article" id="guide-halloween" style="--h-col:#ea580c">
+        <h3><span class="em">🎃</span>Halloween</h3>
+        <p class="rule-line">Fixed date: October 31</p>
+        <p>Halloween's roots lie in Samhain, the Gaelic festival marking the end of the harvest and the start of winter, when the boundary between the living and the dead was believed to grow thin. In the 8th century, Pope Gregory III dedicated November 1 to all the saints. Later that observance spread across the whole church, and the evening before, All Hallows' Eve, became "Halloween".</p>
+        <p>In Ireland and Scotland, people went "guising" in costume from house to house, and carved lanterns from turnips. When Irish and Scottish immigrants brought these customs to North America in the 19th century, they found pumpkins larger and easier to carve. The phrase "trick or treat" appears in print in North America in the 1920s and became widespread after the Second World War.</p>
+        <h4>Around the world</h4>
+        <p>Halloween is often confused with Mexico's Día de los Muertos, which is a separate celebration held on November 1 and 2 to honour family members who have died, with altars, marigolds and favourite foods. In the UK and Ireland, Halloween is increasingly popular with children, though Bonfire Night, five days later, is still the bigger event in many English towns.</p>
+        <p class="good-to-know"><b>Good to know:</b> the countdown reaches zero at midnight when October 31 begins, but trick-or-treating usually starts around dusk, roughly 18 hours later. In 2026 Halloween is a Saturday, which usually means bigger parties and more trick-or-treaters.</p>
+        <a class="guide-cta" href="?h=halloween" data-h="halloween">Count down to Halloween</a>
+      </article>
+
+      <article class="guide-article" id="guide-bonfire" style="--h-col:#dc2626">
+        <h3><span class="em">🔥</span>Bonfire Night</h3>
+        <p class="rule-line">Fixed date: November 5</p>
+        <p>Also called Guy Fawkes Night, Bonfire Night marks the failure of the Gunpowder Plot of 1605. A group of Catholic conspirators led by Robert Catesby planned to blow up the House of Lords during the State Opening of Parliament, killing King James I. Guy Fawkes was caught guarding barrels of gunpowder beneath the building on the night of November 4–5, and Londoners lit bonfires that same evening to celebrate the king's survival.</p>
+        <p>An Act of Parliament in 1606 made November 5 an official day of thanksgiving, a law that stayed in place until 1859. The effigies burned on bonfires became known as "guys", which is where the everyday word comes from.</p>
+        <h4>Traditions today</h4>
+        <p>Towns across Britain hold public fireworks displays, and the celebrations in Lewes, East Sussex, with their torchlit processions, are among the largest. Before every State Opening of Parliament, the Yeomen of the Guard still ceremonially search the cellars of the Palace of Westminster.</p>
+        <p class="good-to-know"><b>Good to know:</b> many organised displays happen on the weekend closest to November 5, so check local listings rather than assuming the 5th. Pets are often frightened by fireworks, so keep them indoors with the curtains drawn and some background noise.</p>
+        <a class="guide-cta" href="?h=bonfire" data-h="bonfire">Count down to Bonfire Night</a>
+      </article>
+
+      <article class="guide-article" id="guide-thanksgiving" style="--h-col:#a16207">
+        <h3><span class="em">🦃</span>Thanksgiving</h3>
+        <p class="rule-line">US: fourth Thursday of November</p>
+        <p>The holiday recalls a three-day harvest gathering in 1621 at Plymouth Colony, attended by the English settlers and around ninety Wampanoag men led by the sachem Massasoit. Days of thanksgiving were common among colonists, but a national holiday came much later. Writer and editor Sarah Josepha Hale campaigned for it for decades, and in 1863 Abraham Lincoln proclaimed the last Thursday of November a national day of thanksgiving.</p>
+        <p>In 1939, a year when November had five Thursdays, Franklin Roosevelt moved the holiday a week earlier to lengthen the Christmas shopping season. The change was unpopular and some states refused to follow it, so in 1941 Congress fixed the date by law as the fourth Thursday of November. The Macy's parade in New York has run since 1924, and the Detroit Lions have played on Thanksgiving since 1934.</p>
+        <p>The holiday has another side as well. Since 1970, many Native Americans have gathered at Plymouth on the same day for a National Day of Mourning, reflecting on what colonisation meant for Indigenous peoples.</p>
+        <h4>Around the world</h4>
+        <p>Canada celebrates Thanksgiving on the second Monday of October, earlier in the season because the harvest there ends sooner. Its date was fixed in 1957.</p>
+        <p class="good-to-know"><b>Good to know:</b> a frozen turkey needs about 24 hours in the fridge for every 4 to 5 pounds, so a 20-pound bird should start thawing on the Saturday or Sunday before. Thanksgiving week is one of the busiest travel periods of the year in the US, and the Wednesday before and the Sunday after are usually the most crowded days.</p>
+        <a class="guide-cta" href="?h=thanksgiving" data-h="thanksgiving">Count down to Thanksgiving</a>
+      </article>
+
+      <article class="guide-article" id="guide-xmaseve" style="--h-col:#d97706">
+        <h3><span class="em">🌟</span>Christmas Eve</h3>
+        <p class="rule-line">Fixed date: December 24</p>
+        <p>In much of the world, Christmas Eve is the main celebration rather than a warm-up. Christian tradition historically counted a day as starting at sunset, so the festival began the evening before. Germany, Austria and the Scandinavian countries open presents on the evening of the 24th. In Poland, the Wigilia supper traditionally begins when the first star appears in the sky, and across Latin America families gather late for the Nochebuena meal.</p>
+        <p>Many churches hold a midnight Mass or a candlelit evening service. In Iceland, the Jólabókaflóð, or "Christmas book flood", has families exchanging books on Christmas Eve and spending the night reading. The evening also has a place in history: during the first winter of the First World War, soldiers on parts of the Western Front stopped fighting around Christmas Eve and Christmas Day 1914 in what became known as the Christmas Truce.</p>
+        <p class="good-to-know"><b>Good to know:</b> shops often close early on December 24, and Christmas Eve is a public holiday or half-day in several countries. Plan final food shopping for the 22nd or 23rd if you can.</p>
+        <a class="guide-cta" href="?h=xmaseve" data-h="xmaseve">Count down to Christmas Eve</a>
+      </article>
+
+      <article class="guide-article" id="guide-christmas" style="--h-col:#dc2626">
+        <h3><span class="em">🎄</span>Christmas Day</h3>
+        <p class="rule-line">Fixed date: December 25 (January 7 for many Orthodox churches)</p>
+        <p>Christmas celebrates the birth of Jesus. The Bible doesn't give a date, and the earliest record of a celebration on December 25 comes from Rome in AD 336. Why that date was chosen is still debated. One theory links it to Roman midwinter festivals such as Saturnalia and the feast of the Unconquered Sun. Another holds that early Christians calculated it as nine months after March 25, the date they associated with the conception.</p>
+        <p>Many of today's customs are more recent. Decorated evergreen trees came from Germany and became fashionable in Britain after an 1848 illustration showed Queen Victoria and Prince Albert's family around one. Santa Claus grew out of Saint Nicholas and the Dutch Sinterklaas, and his modern image was shaped by the 1823 poem "A Visit from St. Nicholas" and Thomas Nast's cartoons later that century.</p>
+        <h4>Around the world</h4>
+        <p>Orthodox churches that still follow the Julian calendar, including the Russian and Serbian churches, celebrate on January 7. Ukraine moved its official Christmas to December 25 in 2023. In Australia, Christmas falls in summer and often means a beach or barbecue. In the UK, Canada and Australia, Boxing Day on December 26 is a public holiday too.</p>
+        <p class="good-to-know"><b>Good to know:</b> Christmas 2026 falls on a Friday, which makes for a three-day weekend with Boxing Day on Saturday. Carriers publish their holiday shipping cut-offs each autumn, usually in the middle of December for standard delivery, so check them before you order gifts.</p>
+        <a class="guide-cta" href="?h=christmas" data-h="christmas">Count down to Christmas</a>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- AdSense in-content unit can go here after approval -->
+
+<!-- MATHS -->
+<section class="section" id="maths">
+  <h2>How the dates are calculated</h2>
+  <p class="lede">Every date on this page comes from one of three kinds of rule. Here's how each one works, so you can check the numbers yourself.</p>
+  <div class="method-grid prose">
+    <div>
+      <h3>Fixed dates</h3>
+      <p>Christmas, New Year, Halloween and the other fixed holidays are the simplest case. The countdown builds the date for this year and checks whether it has already passed. If it has, it uses next year's date instead.</p>
+      <div class="formula">target = date(this year, month, day)
+if target ≤ now: target = date(next year, month, day)</div>
+    </div>
+    <div>
+      <h3>"The nth weekday of a month"</h3>
+      <p>Thanksgiving, Mother's Day and Father's Day are defined by weekday. If the 1st of the month falls on weekday <i>w₁</i> (Sunday = 0 … Saturday = 6), the <i>n</i>th occurrence of weekday <i>w</i> falls on:</p>
+      <div class="formula">day = 1 + ((w − w₁ + 7) mod 7) + 7 × (n − 1)</div>
+      <p>For Thanksgiving 2026, November 1 is a Sunday (<i>w₁</i> = 0) and Thursday is <i>w</i> = 4, so the fourth Thursday is 1 + 4 + 21 = <strong>November 26</strong>.</p>
+    </div>
+    <div class="method-wide">
+      <h3>Easter: the computus</h3>
+      <p>Calculating Easter is known as the <em>computus</em>, and for centuries it was one of the most important problems in applied mathematics. This page uses the Anonymous Gregorian algorithm, published in 1876 and still widely used. It needs only whole-number division (÷, discarding the remainder) and remainders (mod). Here it is, worked through for the year 2027:</p>
+      <div class="formula"><span class="c">step                                   Y = 2027</span>
+a = Y mod 19                           = 13   <span class="c">position in the 19-year lunar cycle</span>
+b = Y ÷ 100,  c = Y mod 100            = 20, 27
+d = b ÷ 4,    e = b mod 4              = 5, 0
+f = (b + 8) ÷ 25                       = 1
+g = (b − f + 1) ÷ 3                    = 6
+h = (19a + b − d − g + 15) mod 30      = 1    <span class="c">days from Mar 21 to the church full moon</span>
+i = c ÷ 4,    k = c mod 4              = 6, 3
+l = (32 + 2e + 2i − h − k) mod 7       = 5    <span class="c">days from that full moon to Sunday</span>
+m = (a + 11h + 22l) ÷ 451              = 0
+month = (h + l − 7m + 114) ÷ 31        = 3    <span class="c">March</span>
+day   = ((h + l − 7m + 114) mod 31) + 1 = 28
+
+<span class="c">result:</span> Easter 2027 is Sunday, March 28</div>
+      <p>The corrections <i>f</i> and <i>g</i> account for the small drift between the lunar tables and the real moon over centuries, and <i>d</i> and <i>e</i> handle the Gregorian leap-year rule that skips leap days in most century years.</p>
+    </div>
+    <div class="method-wide">
+      <h3>Turning a date into a countdown</h3>
+      <p>Once the target date is known, the page subtracts the current time and gets a difference in milliseconds, then splits it into units. A day is 86,400,000 ms, an hour 3,600,000 ms and a minute 60,000 ms. Days are the whole number of 86,400,000 ms blocks, hours are what's left divided into 3,600,000 ms blocks, and so on. This runs again every second. Because both times come from your own device, the countdown automatically follows your time zone and daylight-saving changes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PLANNING -->
+<section class="section" id="planning">
+  <h2>Planning ahead for a big holiday</h2>
+  <p class="lede">A countdown is most useful when you know what to do with the time. This is a rough timeline for a family holiday such as Thanksgiving or Christmas, followed by a few ways to make the wait more fun for children.</p>
+  <div class="plan-grid prose">
+    <div>
+      <h3>A working timeline</h3>
+      <ol class="timeline">
+        <li><b>8 weeks or more before</b>Book flights, trains and accommodation. Prices for peak holiday dates tend to rise as they approach. Agree on a rough budget for gifts, food and travel.</li>
+        <li><b>6 weeks before</b>Decide who is hosting and make a guest list. Start a gift list, and check your carriers' published shipping deadlines, especially for anything going abroad.</li>
+        <li><b>3 to 4 weeks before</b>Order gifts and any specialty food, such as a fresh turkey or a particular cake. Book restaurants and haircuts, which fill up fast in the final weeks.</li>
+        <li><b>1 to 2 weeks before</b>Confirm numbers with guests and ask about dietary needs. Buy drinks and non-perishable ingredients, and work out when anything frozen needs to go in the fridge to thaw.</li>
+        <li><b>2 to 3 days before</b>Buy fresh food, tidy the space, and prepare dishes that keep well. Wrap presents so the night before stays calm.</li>
+        <li><b>The day itself</b>Follow a simple cooking schedule written out backwards from mealtime, and accept that something small will go wrong. Nobody remembers it afterwards.</li>
+      </ol>
+    </div>
+    <div>
+      <h3>Making the wait fun for children</h3>
+      <ul class="idea-list">
+        <li><b>Paper chain.</b> Make one link for each day left and let children tear one off every morning. It turns an abstract number into something they can see shrinking.</li>
+        <li><b>Advent calendar.</b> A traditional calendar runs from December 1 to December 24. A homemade one with small notes or activities works just as well as chocolate.</li>
+        <li><b>Activity jar.</b> Fill a jar with one slip of paper per day, each naming a small themed activity: make a card, bake cookies, watch a holiday film, learn a fact from the guide above.</li>
+        <li><b>Check the clock together.</b> Open this page each day and read out the numbers. It's a gentle way to practise counting, subtraction and telling time.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- FACTS -->
+<section class="section" id="facts">
+  <h2>Calendar curiosities</h2>
+  <ul class="facts">
+    <li><b>Easter can't land on March 21.</b> Its earliest possible date is March 22, which last happened in 1818 and next happens in 2285.</li>
+    <li><b>Thanksgiving has fallen as early as November 22 and as late as November 28.</b> Those are the only seven dates the fourth Thursday can occupy.</li>
+    <li><b>Jack-o'-lanterns started as turnips.</b> Carved turnips and other root vegetables came first in Ireland and Scotland; pumpkins were an American adaptation.</li>
+    <li><b>Americans nearly celebrated on July 2.</b> That's the day Congress voted for independence; July 4 is when it approved the Declaration's wording.</li>
+    <li><b>Christmas trees became a craze in Britain thanks to a picture.</b> An 1848 illustration of the royal family around a decorated tree made the German custom fashionable.</li>
+    <li><b>One year had two Thanksgivings.</b> After Roosevelt moved the date in 1939, some states kept the old one, so Americans ate turkey on different Thursdays until 1941.</li>
+    <li><b>England's year used to start in March.</b> Until 1752, the legal new year in England began on March 25, not January 1.</li>
+    <li><b>Some countries have two Christmases.</b> Orthodox churches following the Julian calendar celebrate on January 7, thirteen days after December 25.</li>
+  </ul>
+</section>
 
 <!-- FAQ -->
-<div class="faq-wrap">
+<div class="faq-wrap" id="faq">
   <h2 class="faq-title">Common questions</h2>
 
   <div class="faq-item">
-    <button class="faq-q" onclick="toggleFaq(this)">How accurate is the countdown? <span class="faq-arrow">▼</span></button>
-    <div class="faq-a">The countdown updates every second using your device's local clock. It counts down to midnight (00:00:00) on the date of the holiday in your local time zone, so it's as accurate as your device's clock.</div>
+    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">How accurate is the countdown? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">The countdown updates every second using your device's local clock. It counts down to midnight (00:00:00) on the date of the holiday in your local time zone, so it's as accurate as your device's clock. Most phones and computers sync their clocks automatically, so this is usually accurate to within a second.</div>
   </div>
   <div class="faq-item">
-    <button class="faq-q" onclick="toggleFaq(this)">Why does Easter change every year? <span class="faq-arrow">▼</span></button>
-    <div class="faq-a">Easter is a "moveable feast" calculated as the first Sunday after the first full moon following the spring equinox (March 21). This means it can fall anywhere between March 22 and April 25 each year.</div>
+    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">How many days until Christmas this year? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Select Christmas at the top of the page to see the live, exact countdown in days, hours, minutes and seconds. Christmas 2026 falls on a Friday, December 25, and Christmas 2027 falls on a Saturday.</div>
   </div>
   <div class="faq-item">
-    <button class="faq-q" onclick="toggleFaq(this)">What happens when a holiday passes? <span class="faq-arrow">▼</span></button>
-    <div class="faq-a">Once a holiday passes, the countdown automatically rolls forward to the same holiday next year. So on December 26th, the Christmas countdown immediately starts counting down to next Christmas.</div>
+    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Why does Easter change every year? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Easter is a "moveable feast": the first Sunday after the church's full moon on or after March 21. Because it depends on both the moon and the day of the week, it can fall anywhere between March 22 and April 25. The <a href="#maths">calculation section</a> shows the full method with a worked example.</div>
   </div>
   <div class="faq-item">
-    <button class="faq-q" onclick="toggleFaq(this)">How many days until Christmas this year? <span class="faq-arrow">▼</span></button>
-    <div class="faq-a">Select Christmas at the top of the page to see the live, exact countdown in days, hours, minutes and seconds. It updates in real time every second.</div>
+    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">When is Orthodox Easter? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Most Orthodox churches calculate Easter using the Julian calendar, so it usually falls later than Western Easter. Orthodox Easter is April 12 in 2026 and May 2 in 2027. In 2028 both traditions celebrate on the same day, April 16.</div>
   </div>
   <div class="faq-item">
-    <button class="faq-q" onclick="toggleFaq(this)">Are the holiday dates fixed or variable? <span class="faq-arrow">▼</span></button>
-    <div class="faq-a">Most holidays like Christmas (Dec 25), New Year (Jan 1), Halloween (Oct 31) and Valentine's Day (Feb 14) are fixed. Easter, Thanksgiving (4th Thursday of November in the US) and Mother's Day (2nd Sunday of May) are calculated dynamically each year.</div>
+    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">What happens when a holiday passes? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Once a holiday starts, the countdown automatically rolls forward to the same holiday next year. On the morning of December 25, for example, the Christmas countdown already shows the time left until next Christmas.</div>
   </div>
   <div class="faq-item">
-    <button class="faq-q" onclick="toggleFaq(this)">Does the countdown adjust for my time zone? <span class="faq-arrow">▼</span></button>
-    <div class="faq-a">Yes. The countdown uses your device's local date and time, so it always counts down to midnight on the holiday date as it occurs in your own time zone — not a fixed UTC time.</div>
+    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Are the holiday dates fixed or variable? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Christmas (Dec 25), New Year (Jan 1), Halloween (Oct 31), Valentine's Day (Feb 14) and the other calendar-date holidays are fixed. Easter, Thanksgiving (fourth Thursday of November), Mother's Day (second Sunday of May) and Father's Day (third Sunday of June) are calculated fresh for each year. See the <a href="#dates">date table</a> for the next three years.</div>
   </div>
   <div class="faq-item">
-    <button class="faq-q" onclick="toggleFaq(this)">Why do some holidays fall on different dates in different countries? <span class="faq-arrow">▼</span></button>
-    <div class="faq-a">A few holidays on this page — like Thanksgiving, Mother's Day, and Father's Day — are specifically the US observance. Other countries mark similar holidays on different dates (for example, Canadian Thanksgiving falls in October). This page uses the most widely searched US/UK dates for each.</div>
+    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Does the countdown adjust for my time zone? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Yes. The countdown uses your device's local date and time, so it always counts down to midnight on the holiday as it occurs in your own time zone, not a fixed UTC time. It also follows daylight-saving changes automatically.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Why does the day count look one lower than I expected? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">The Days figure counts only complete 24-hour periods. If the holiday is on Friday and it's Tuesday afternoon, there are 2 full days plus some hours left, so the clock shows 2 days and the remaining hours separately.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Can I bookmark or share a specific countdown? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">Yes. When you choose a holiday, the page address updates to include it, for example <code>?h=halloween</code>. Bookmark or share that link and it will open straight to the same countdown.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">When is Mother's Day in the UK? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">The UK celebrates Mothering Sunday on the fourth Sunday of Lent, three weeks before Easter. That's March 15 in 2026, March 7 in 2027 and March 26 in 2028. The countdown on this page follows the US date, the second Sunday of May.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Why do some holidays fall on different dates in different countries? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">A few holidays on this page, including Thanksgiving and Mother's Day, follow the US observance. Other countries mark similar days at different times: Canadian Thanksgiving is the second Monday of October, and Australia's Father's Day is the first Sunday of September. The <a href="#guide">holiday guide</a> lists the main variations for each one.</div>
+  </div>
+  <div class="faq-item">
+    <button class="faq-q" onclick="toggleFaq(this)" aria-expanded="false">Do I need to install anything or create an account? <span class="faq-arrow">▼</span></button>
+    <div class="faq-a">No. The countdown works in any modern web browser on phones, tablets and computers. All of the date calculations run inside your browser, and there is nothing to sign up for.</div>
   </div>
 </div>
 
+<!-- ABOUT NOTE -->
+<section class="about-note" aria-labelledby="about-heading">
+  <h2 id="about-heading">About this page</h2>
+  <p>Holi·days is an independent, free holiday countdown. Dates are calculated using the published rules described above and checked against official calendars. Historical details are drawn from standard reference sources and reviewed periodically. Last reviewed: September 2026.</p>
+  <p>Spotted a mistake or want another holiday added? <a href="contact.html">Get in touch</a>.</p>
+</section>
+
 <!-- FOOTER -->
 <footer>
-  <span>Holi·days · Free Holiday Countdown · Updates live every second</span>
+  <span>© 2026 Holi·days. Free holiday countdown.</span>
   <span>
-    <a href="privacy.html">Privacy Policy</a> &nbsp;·&nbsp;
-    <a href="disclaimer.html">Disclaimer</a> &nbsp;·&nbsp;
-    <a href="about.html">About</a>
+    <a href="about.html">About</a> &nbsp;
+    <a href="contact.html">Contact</a> &nbsp;
+    <a href="privacy.html">Privacy Policy</a> &nbsp;
+    <a href="disclaimer.html">Disclaimer</a>
   </span>
 </footer>
 
@@ -629,11 +1088,18 @@
 
   // ── STATE ──
   let activeId = 'christmas';
+  try {
+    const wanted = new URLSearchParams(location.search).get('h');
+    if (wanted && HOLIDAYS.some(h => h.id === wanted)) activeId = wanted;
+  } catch (e) {}
 
   function getActive() { return HOLIDAYS.find(h => h.id === activeId); }
 
-  function setActive(id) {
+  function setActive(id, updateUrl = true) {
     activeId = id;
+    if (updateUrl) {
+      try { history.replaceState(null, '', '?h=' + id + location.hash); } catch (e) {}
+    }
     document.querySelectorAll('.h-pill').forEach(p => p.classList.toggle('active', p.dataset.id === id));
     document.querySelectorAll('.h-card').forEach(c => c.classList.toggle('active-card', c.dataset.id === id));
     const h = getActive();
@@ -741,8 +1207,56 @@
     grid.appendChild(card);
   });
 
-  // ── INIT CARD COLOR ──
-  document.getElementById('main-card').style.setProperty('--h-color', getActive().color);
+  // ── INIT ──
+  setActive(activeId, false);
+
+  // Guide links: switch countdown without reloading
+  document.querySelectorAll('[data-h]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const id = a.dataset.h;
+      document.querySelectorAll('.h-pill').forEach(p => {
+        p.style.background = p.dataset.id === id ? HOLIDAYS.find(h => h.id === id).color : '';
+      });
+      setActive(id);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  // ── DATES TABLE (keeps itself current in future years) ──
+  function buildDatesTable() {
+    const body = document.getElementById('dates-body');
+    if (!body) return;
+    const y0 = new Date().getFullYear();
+    if (y0 === 2026) return; // static HTML is already correct for 2026–2028
+    const years = [y0, y0 + 1, y0 + 2];
+    const fmt = d => d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    const rules = {
+      newyear:      y => new Date(y, 0, 1),
+      valentine:    y => new Date(y, 1, 14),
+      stpatrick:    y => new Date(y, 2, 17),
+      easter:       y => getEaster(y),
+      mothersday:   y => getNthWeekday(y, 5, 2, 0),
+      fathersday:   y => getNthWeekday(y, 6, 3, 0),
+      july4:        y => new Date(y, 6, 4),
+      halloween:    y => new Date(y, 9, 31),
+      bonfire:      y => new Date(y, 10, 5),
+      thanksgiving: y => getNthWeekday(y, 11, 4, 4),
+      xmaseve:      y => new Date(y, 11, 24),
+      christmas:    y => new Date(y, 11, 25),
+    };
+    document.querySelectorAll('.dates-table th.yr').forEach((th, i) => th.textContent = years[i]);
+    const ids = Object.keys(rules);
+    body.querySelectorAll('tr').forEach((tr, r) => {
+      const cells = tr.querySelectorAll('td:not(.rule)');
+      cells.forEach((td, i) => td.textContent = fmt(rules[ids[r]](years[i])));
+    });
+    const title = document.querySelector('#dates h2');
+    if (title) title.textContent = `Holiday dates for ${years[0]}, ${years[1]} and ${years[2]}`;
+    const note = document.querySelector('.table-note');
+    if (note) note.textContent = 'Related dates: Good Friday falls two days before Easter, UK Mothering Sunday three weeks before Easter, and Canadian Thanksgiving on the second Monday of October. When a fixed-date public holiday lands on a weekend, the day off often moves to a nearby weekday, but the holiday itself, and this countdown, stay on the calendar date.';
+  }
+  buildDatesTable();
 
   // ── TICK EVERY SECOND ──
   tick();
@@ -814,7 +1328,13 @@
     const isOpen = ans.classList.contains('open');
     document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
     document.querySelectorAll('.faq-q').forEach(q => q.classList.remove('open'));
-    if (!isOpen) { ans.classList.add('open'); btn.classList.add('open'); }
+    document.querySelectorAll('.faq-a').forEach(a => a.style.maxHeight = '');
+    document.querySelectorAll('.faq-q').forEach(q => q.setAttribute('aria-expanded', 'false'));
+    if (!isOpen) {
+      ans.classList.add('open'); btn.classList.add('open');
+      ans.style.maxHeight = ans.scrollHeight + 32 + 'px';
+      btn.setAttribute('aria-expanded', 'true');
+    }
   }
 </script>
 </body>
